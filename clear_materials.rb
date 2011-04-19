@@ -1,9 +1,7 @@
-UI::menu("Plugins").add_item($clearMaterialsStrings.GetString("Clear Materials")) do
-  clear_materials
-end
+require 'sketchup'
 
 def clear_materials(selection=nil)
-  (selection || Sketchup.active_model.selection).each do |e|
+  (selection || Sketchup.active_model.selection || []).each do |e|
     case e.typename
     when 'Group'
       clear_materials e.entities
@@ -14,3 +12,8 @@ def clear_materials(selection=nil)
     end
   end
 end
+
+unless file_loaded? File.basename(__FILE__)
+  UI.menu("Plugins").add_item("Clear Materials") { clear_materials }
+end
+file_loaded File.basename(__FILE__)
